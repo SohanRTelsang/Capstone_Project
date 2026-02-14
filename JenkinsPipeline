@@ -1,0 +1,25 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout Code') {
+            steps {
+                // Specified branch 'main' and added credentials for GitHub access
+                git branch: 'main', 
+                    url: 'https://github.com/SohanRTelsang/Capstone_Project.git',
+                    credentialsId: 'github-token' 
+            }
+        }
+
+        stage('Deploy via Ansible') {
+    steps {
+        ansiblePlaybook(
+            playbook: 'deploy.yml',
+            inventory: 'hosts.ini',
+            credentialsId: 'multi-cloud-key', // Jenkins will now handle the key
+            disableHostKeyChecking: true
+        )
+    }
+}
+    }
+}
