@@ -1,0 +1,21 @@
+---
+- name: Setup Multi-Cloud Web Environment
+  hosts: all
+  become: yes
+  tasks:
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: latest
+        update_cache: yes
+
+    - name: Deploy Cloud Specific Content
+      copy:
+        content: |
+          <html>
+          <body>
+            <h1>Welcome to {{ 'AWS' if inventory_hostname == 'aws_app' else 'Azure' }}</h1>
+            <p>Disaster Recovery Project - Task 3</p>
+          </body>
+          </html>
+        dest: /var/www/html/index.html
